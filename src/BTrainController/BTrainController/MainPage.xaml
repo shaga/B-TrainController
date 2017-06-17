@@ -1,0 +1,34 @@
+﻿<Page
+    x:Class="BTrainController.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BTrainController"
+    xmlns:views="using:BTrainController.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="Page"
+    mc:Ignorable="d">
+    <Page.DataContext>
+        <local:MainViewModel/>
+    </Page.DataContext>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="3*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <views:TrainPositionView TrainPosition="{Binding DisplayPosition}" Grid.Row="1" Grid.Column="1"/>
+        <CaptureElement Grid.Row="0" Grid.Column="0" x:Name="CaptureElement" Visibility="Collapsed"/>
+        <MediaElement Grid.Row="0" Grid.Column="0" x:Name="MediaElement" Visibility="Collapsed"/>
+        <views:SignalView Grid.Row="0" Grid.Column="0" Margin="3" SignalStatus="{Binding SignalStatus}"/>
+        <!--<views:SpeedView Margin="3" Grid.Row="1" Grid.Column="0" SpeedLevel="{Binding SpeedLevel}"/>-->
+        <views:SpeedMeterView Grid.Row="1" Grid.Column="0" Margin="20,0,0,0"
+                              Unit="SPEED" UnitBrush="Black" SpeedLevel="{Binding SpeedLevel}"/>
+        <views:StatusTextView Grid.Row="0" Grid.Column="1" TrainStatus="{Binding TrainStatus}"/>
+    </Grid>
+</Page>
+
