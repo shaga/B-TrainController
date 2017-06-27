@@ -8,9 +8,16 @@ namespace BTrainDemoApp.Models
 {
     public enum EControlMode
     {
-        None,
+        Connecting,
         Demo,
         VoiceCommand,
+    }
+
+    public enum ETrainStatus
+    {
+        Stop,
+        Go,
+        Arriving,
     }
 
     class Common

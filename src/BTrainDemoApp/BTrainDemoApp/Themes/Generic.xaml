@@ -11,7 +11,7 @@
 
     
     
-    <Style TargetType="controls:OsakaLoopLineSign">
+    <!--<Style TargetType="controls:OsakaLoopLineSign">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:OsakaLoopLineSign">
@@ -84,7 +84,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 
     <Style TargetType="Ellipse" x:Key="PosCircle">
         <Setter Property="Width" Value="25"/>
@@ -92,6 +92,7 @@
         <Setter Property="Stroke" Value="Black"/>
         <Setter Property="StrokeThickness" Value="1"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
 
     <Style TargetType="controls:TrainMap">
@@ -104,7 +105,9 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="23"/>
                                     <RowDefinition Height="26"/>
+                                    <RowDefinition Height="5"/>
                                     <RowDefinition/>
+                                    <RowDefinition Height="5"/>
                                     <RowDefinition Height="26"/>
                                     <RowDefinition Height="23"></RowDefinition>
                                 </Grid.RowDefinitions>
@@ -112,12 +115,14 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="23"/>
                                     <ColumnDefinition Width="26"/>
+                                    <ColumnDefinition Width="50"/>
                                     <ColumnDefinition/>
+                                    <ColumnDefinition Width="50"/>
                                     <ColumnDefinition Width="26"/>
                                     <ColumnDefinition Width="23"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Path Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="3"
+                                <Path Grid.Row="1" Grid.RowSpan="5" Grid.Column="1" Grid.ColumnSpan="5"
                                       Stretch="Uniform"
                                       Stroke="Black" StrokeThickness="1">
                                     <Path.Data>
@@ -134,118 +139,213 @@
 
 
                                 <!-- Position Left -->
-                                <Ellipse Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource PosCircle}"
-                                         HorizontalAlignment="Center"
+                                <Ellipse Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource PosCircle}"
                                          Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=3}"/>
 
                                 <!-- Position Right -->
-                                <Ellipse Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource PosCircle}"
-                                         HorizontalAlignment="Center"
-                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=3}"/>
+                                <Ellipse Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2" Style="{StaticResource PosCircle}"
+                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=7}"/>
+
+                                <!-- Pisition BackLeft -->
+                                <Ellipse Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource PosCircle}"
+                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=2}"/>
+
+                                <!-- Pisition BackRight -->
+                                <Ellipse Grid.Row="1" Grid.RowSpan="2" Grid.Column="4" Style="{StaticResource PosCircle}"
+                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=8}"/>
 
                                 <!-- Position BackCenter -->
-                                <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource PosCircle}"
-                                         HorizontalAlignment="Center"
-                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=3}"/>
+                                <Ellipse Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" Style="{StaticResource PosCircle}"
+                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=1}"/>
 
                                 <!-- Position FrontCenter -->
-                                <Ellipse Grid.Row="3" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource PosCircle}"
-                                         HorizontalAlignment="Center"
-                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=3}"/>
+                                <Ellipse Grid.Row="5" Grid.RowSpan="2" Grid.Column="3" Style="{StaticResource PosCircle}"
+                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=5}"/>
+                                
+                                <!-- Pisition FrontkLeft -->
+                                <Ellipse Grid.Row="4" Grid.RowSpan="2" Grid.Column="2" Style="{StaticResource PosCircle}"
+                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=4}"/>
+
+                                <!-- Pisition FrontRight -->
+                                <Ellipse Grid.Row="4" Grid.RowSpan="2" Grid.Column="4" Style="{StaticResource PosCircle}"
+                                         Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=6}"/>
+
                             </Grid>
                         </Viewbox>
                         
                     </Border>
-                    
-                    <!--<Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="controls:DomoControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:DomoControl">
+                    <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50"/>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition />
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="50"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="23"/>
-                            <ColumnDefinition Width="27"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="27"/>
-                            <ColumnDefinition Width="23"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                        <controls:OsakaLoopLineSign Grid.Row="0" Height="200" VerticalAlignment="Top"/>
+                        <ToggleSwitch x:Uid="SwitchLoopDirection" Grid.Row="1" Margin="5"
+                                      OnContent="" OffContent=""/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-                        <Border Grid.Row="0" Grid.Column="0" Width="{TemplateBinding SideMarginWidth}"/>
-                        <Border Grid.Row="1" Grid.Column="3" Width="{TemplateBinding MiddleMarginWidth}"/>
-                        <Border Grid.Row="3" Grid.Column="5" Width="{TemplateBinding MiddleMarginWidth}"/>
-                        <Border Grid.Row="4" Grid.Column="8" Width="{TemplateBinding SideMarginWidth}"/>
+    <Style TargetType="controls:GuideMonitor">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:GuideMonitor">
+                    <Border
+                        Padding="3"
+                        Background="Black"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Viewbox Stretch="Uniform">
+                            <Grid Width="800" Height="430">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="120"/>
+                                    <RowDefinition Height="310"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="260"/>
+                                    <ColumnDefinition Width="540"/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <!-- TopLeft 方向表示 -->
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="45"/>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="15"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="45"/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
 
-                        <Path Grid.Row="0" Grid.RowSpan="5"
-                              Grid.Column="2" Grid.ColumnSpan="5"
-                              Stretch="Uniform"
-                              Stroke="Black" StrokeThickness="2"
-                        >
-                            <Path.Data>
-                                <PathGeometry>
-                                    <PathFigure StartPoint="100,0">
-                                        <LineSegment Point="220,0"/>
-                                        <ArcSegment IsLargeArc="False" Size="100,100" Point="220,200" SweepDirection="Clockwise"/>
-                                        <LineSegment Point="100,200"/>
-                                        <ArcSegment IsLargeArc="False" Size="100,100" Point="100,0" SweepDirection="Clockwise"/>
-                                    </PathFigure>
-                                </PathGeometry>
-                            </Path.Data>
-                        </Path>
+                                    <Border Background="#ff3333" Grid.Row="0" Grid.Column="0">
+                                        <Ellipse HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                                 Margin="5" Fill="Transparent"
+                                                 Stroke="White" StrokeThickness="3"/>
+                                    </Border>
+                                    
+                                    <Viewbox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Stretch="Uniform">
+                                        <TextBlock x:Uid="TextTrainLocal" Text="" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                    </Viewbox>
+                                    
+                                    <!-- xx・xx方面 -->
+                                    <Viewbox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Stretch="Uniform">
+                                        <TextBlock Text="{TemplateBinding TrainDirection}" HorizontalAlignment="Center"/>
+                                    </Viewbox>
+                                    <Viewbox Grid.Row="2" Grid.Column="3" Stretch="Uniform">
+                                        <TextBlock x:Uid="TextTrainDirection" Text=""/>
+                                    </Viewbox>
+                                </Grid>
+                                
+                                <!-- TopRight 行き先/現在地表示 -->
+                                <Grid Grid.Row="0" Grid.Column="1" Padding="3">
+                                    <Grid.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Style>
+                                    </Grid.Resources>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <!-- つぎは/まもなく/ただいま -->
+                                    <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Left">
+                                        <TextBlock HorizontalAlignment="Left" Text="{TemplateBinding StatusMotion}"/>
+                                    </Viewbox>
+                                    <!-- 駅名 -->
+                                    <Viewbox Grid.Row="1" Stretch="Uniform">
+                                        <TextBlock HorizontalAlignment="Center" Text="{TemplateBinding StationName}"/>
+                                    </Viewbox>
+                                </Grid>
 
-                        --><!-- Position Left --><!--
-                        <Ellipse Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Center"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=3}"/>
+                                <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Source="..\Images\OsakaLoopMapInner.png"
+                                       Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsOuterLoop, Converter={StaticResource BooleanVisibilityConverter}, ConverterParameter=true}"/>
+                                <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Source="..\Images\OsakaLoopMapOuter.png"
+                                       Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsOuterLoop, Converter={StaticResource BooleanVisibilityConverter}}"/>
 
-                        --><!-- Position Right --><!--
-                        <Ellipse Grid.Row="1" Grid.RowSpan="3" Grid.Column="6" Grid.ColumnSpan="2" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Center"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=7}"/>
+                                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="110"/>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="80"/>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition Width="32"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
 
-                        --><!-- Positoon BackLeft --><!--
-                        <Ellipse Grid.Row="1" Grid.Column="3" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Left" Margin="40,0,0,0"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=2}"/>
+                                    <Image Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowLeftRow}" 
+                                           Grid.Column="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowLeftCol}" 
+                                           Source="../Images/ArrowLeft.png" Stretch="None"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowLeftVisibility}"/>
 
-                        --><!-- Positoon BackRight --><!--
-                        <Ellipse Grid.Row="1" Grid.Column="5" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Right" Margin="0,0,40,0"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=8}"/>
+                                    <Image Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowRightRow}"
+                                           Grid.Column="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowRightCol}"
+                                           Source="../Images/ArrowRight.png" Stretch="None"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowRightVisibility}"/>
 
-                        --><!-- Positoon FrontLeft --><!--
-                        <Ellipse Grid.Row="3" Grid.Column="3" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Left" Margin="40,0,0,0"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=4}"/>
+                                    <Ellipse Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleRow}"
+                                             Grid.Column="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleCol}" 
+                                             Width="12" Height="12"
+                                             HorizontalAlignment="Center" VerticalAlignment="Center"
+                                             Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleVisibility}"
+                                             Fill="#cccc00"/>
 
-                        --><!-- Positoon FrontRight --><!--
-                        <Ellipse Grid.Row="3" Grid.Column="5" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Right" Margin="0,0,40,0"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=6}"/>
-
-                        --><!-- Position FrontCenter --><!--
-                        <Ellipse Grid.Row="4" Grid.Column="4" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Center"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=1}"/>
-
-                        --><!-- Position BackCenter --><!--
-                        <Ellipse Grid.Row="0" Grid.Column="4" Style="{StaticResource PosCircle}"
-                                 HorizontalAlignment="Center"
-                                 Fill="{Binding Path=Position, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TrainPosisionConverter}, ConverterParameter=5}"/>
-
-                        <TextBlock Grid.Row="2" Grid.Column="4"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Text="{TemplateBinding TrainStatus}"
-                        />
-
-                    </Grid>-->
-                    
+                                    <Image Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleRow}"
+                                           Grid.Column="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleCol}" 
+                                           Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowLeftStopVisibility}"
+                                           HorizontalAlignment="Right" Source="../Images/ArrowLeftStop.png"/>
+                                    <Image Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleRow}"
+                                           Grid.Column="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleCol}" 
+                                           Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowRightStopVisibility}"
+                                           HorizontalAlignment="Left" Source="../Images/ArrowRightStop.png"></Image>
+                                </Grid>
+                            </Grid>
+                        </Viewbox>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -8,21 +8,21 @@ using Windows.UI.Xaml.Data;
 
 namespace BTrainDemoApp.Models.Converters
 {
-    class BooleanVisibilityConverter : IValueConverter
+    class ControlModeVisivilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            var isVisible = (bool)value;
+            var paramStr = parameter as string;
 
-            var isInvert = false;
+            if (string.IsNullOrEmpty(paramStr)) return Visibility.Collapsed;
 
-            if (parameter != null && !bool.TryParse((string) parameter, out isInvert))
-            {
-                isInvert = false;
-            }
+            var current = (EControlMode) value;
 
-            if (!isInvert) return isVisible ? Visibility.Visible : Visibility.Collapsed;
-            return isVisible ? Visibility.Collapsed : Visibility.Visible;
+            EControlMode mode;
+
+            if (!Enum.TryParse(paramStr, true, out mode)) return Visibility.Collapsed;
+
+            return mode == current ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

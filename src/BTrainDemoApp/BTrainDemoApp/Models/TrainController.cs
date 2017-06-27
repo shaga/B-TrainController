@@ -22,12 +22,12 @@ namespace BTrainDemoApp.Models
 
     public enum EDirection
     {
-        Outside,
         Inside,
+        Outside,
         Stop,
     }
 
-    class TrainController : IDisposable
+    public class TrainController : IDisposable
     {
         #region const
 
@@ -211,7 +211,11 @@ namespace BTrainDemoApp.Models
                 _positionCharacteristic =
                     characteristicResult.Characteristics.FirstOrDefault(c => c.Uuid.Equals(PositionCharacteristicGuid));
 
+                await _positionCharacteristic.WriteClientCharacteristicConfigurationDescriptorAsync(
+                    GattClientCharacteristicConfigurationDescriptorValue.Notify);
                 _positionCharacteristic.ValueChanged += OnUpdatedPosition;
+
+                ConnectionChagned?.Invoke(this, true);
             });
         }
 

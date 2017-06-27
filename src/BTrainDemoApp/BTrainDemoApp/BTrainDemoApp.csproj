@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BTrainDemoApp</RootNamespace>
     <AssemblyName>BTrainDemoApp</AssemblyName>
-    <DefaultLanguage>ja-JP</DefaultLanguage>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
@@ -97,6 +97,12 @@
     </Compile>
     <Compile Include="Data\OsakaLoopLineStations.cs" />
     <Compile Include="Models\Common.cs" />
+    <Compile Include="Models\Converters\ControlModeVisivilityConverter.cs" />
+    <Compile Include="Models\DemoController.cs" />
+    <Compile Include="Models\LoopStationInfo.cs" />
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="Views\Controls\DomoControl.cs" />
+    <Compile Include="Views\Controls\GuideMonitor.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -115,9 +121,17 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="BTrainDemoApp_TemporaryKey.pfx" />
+    <PRIResource Include="Strings\ja-JP\Resources.resw" />
+    <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\VoiceCommandGrammar.xml" />
+    <Content Include="Images\ArrowRightStop.png" />
+    <Content Include="Images\ArrowRight.png" />
+    <Content Include="Images\ArrowLeft.png" />
+    <Content Include="Images\ArrowLeftStop.png" />
+    <Content Include="Images\OsakaLoopMapInner.png" />
+    <Content Include="Images\OsakaLoopMapOuter.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
+using BTrainDemoApp.Data;
 using BTrainDemoApp.Models;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
@@ -19,6 +21,13 @@ namespace BTrainDemoApp.ViewModels
 
         private EControlMode _mode;
         private int _trainPosition;
+        private bool _modeIsVoice;
+        private bool _canSwitch;
+        private bool _isRunning;
+        private bool _isOuterLoop;
+        private bool _isInitialized;
+        private ETrainStatus _trainStatus;
+        private LoopStationInfo _stationInfo;
 
         #endregion
 
@@ -29,7 +38,16 @@ namespace BTrainDemoApp.ViewModels
         public EControlMode Mode
         {
             get => _mode;
-            set => SetProperty(ref _mode, value);
+            set
+            {
+                SetProperty(ref _mode, value);
+                if (_mode == EControlMode.Demo)
+                    DemoController.Start();
+                else
+                {
+                    DemoController.Stop();
+                }
+            }
         }
 
         public int TrainPosition
@@ -38,16 +56,80 @@ namespace BTrainDemoApp.ViewModels
             set => SetProperty(ref _trainPosition, value);
         }
 
+        public bool ModeIsVoice
+        {
+            get => _modeIsVoice;
+            set
+            {
+                SetProperty(ref _modeIsVoice, value);
+                if (IsInitialized)
+                {
+                    Mode = _modeIsVoice ? EControlMode.VoiceCommand : EControlMode.Demo;
+                }
+            }
+        }
+
+        public bool CanSwitch
+        {
+            get => _canSwitch;
+            set => SetProperty(ref _canSwitch, value);
+        }
+
+        public bool IsOuterLoop
+        {
+            get => _isOuterLoop;
+            set => SetProperty(ref _isOuterLoop, value);
+        }
+
+        public bool IsInitialized
+        {
+            get => _isInitialized;
+            set
+            {
+                SetProperty(ref _isInitialized, value);
+                RaisePropertyChanged(nameof(ModeIsVoice));
+            }
+        }
+
+        public ETrainStatus TrainStatus
+        {
+            get => _trainStatus;
+            set => SetProperty(ref _trainStatus, value);
+        }
+
+        public LoopStationInfo StationInfo
+        {
+            get => _stationInfo;
+            set => SetProperty(ref _stationInfo, value);
+        }
+
+        public DemoController DemoController { get; }
+
         #endregion
 
+        #region constructor
 
         public MainPageViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;
 
             _commandReceiver = new VoiceCommandReceiver();
+            _commandReceiver.VoiceCommandReceived += OnReceivedVoiceCommand;
+
             _trainController = new TrainController();
+            _trainController.ConnectionChagned += OnChangedTrainConnection;
+            _trainController.PositionUpdated += OnUpdatedTrainPosition;
+
+            TrainStatus = ETrainStatus.Stop;
+            var stations = new OsakaLoopLineStations();
+            StationInfo = stations[OsakaLoopLineStations.DefaultKey];
+
+            DemoController = new DemoController(_trainController);
         }
+
+        #endregion
+
+        #region method
 
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
@@ -56,10 +138,62 @@ namespace BTrainDemoApp.ViewModels
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
             {
-                Mode = EControlMode.VoiceCommand;
                 _trainController.Connect();
                 await _commandReceiver.Initialize();
             });
         }
+
+        #region Train Controller
+
+        private async void OnUpdatedTrainPosition(object sender, int position)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () => TrainPosition = position);
+        }
+
+        private async void OnChangedTrainConnection(object sender, bool isConnected)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                if (isConnected)
+                {
+                    Mode = ModeIsVoice ? EControlMode.VoiceCommand : EControlMode.Demo;
+                    IsInitialized = true;
+                }
+                else
+                {
+                    Mode = EControlMode.Connecting;
+                    IsInitialized = false;
+                    _trainController.Connect();
+                }
+            });
+        }
+
+        #endregion
+
+        #region VoiceCommand
+
+        private async void OnReceivedVoiceCommand(object sender, EVoiceCommand command)
+        {
+            if (!_trainController.IsConnected && !_modeIsVoice) return;
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                switch (command)
+                {
+                    case EVoiceCommand.Go:
+                        if (_isRunning) break;
+                        _trainController.SetSpeed(IsOuterLoop ? EDirection.Outside : EDirection.Inside, 0x60);
+                        break;
+                    case EVoiceCommand.Stop:
+                        if (!_isRunning) break;
+                        _trainController.SetSpeed(EDirection.Stop);
+                        break;
+                }
+            });
+        }
+
+        #endregion
+
+        #endregion
     }
 }
