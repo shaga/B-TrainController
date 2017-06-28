@@ -31,7 +31,14 @@
                                TrainStatus="{Binding DemoController.TrainStatus}"
                                LoopStationInfo="{Binding DemoController.StationInfo}"
                                Visibility="{Binding Mode, Converter={StaticResource ControlModeVisivilityConverter}, ConverterParameter=Demo}"/>
-        <ToggleSwitch x:Uid="SwitchDemo" Grid.Row="1" Margin="5" IsOn="{Binding ModeIsVoice, Mode=TwoWay}" />
-        <ToggleSwitch Grid.Row="1" Margin="5" HorizontalAlignment="Right" IsOn="{Binding IsOuterLoop, Mode=TwoWay}"/>
+        <ToggleSwitch x:Uid="SwitchDemo" Grid.Row="1" Margin="5" 
+                      IsOn="{Binding ModeIsVoice, Mode=TwoWay}" 
+                      IsEnabled="{Binding CanSwitch}"/>
+        <ToggleSwitch Grid.Row="1" Margin="5" 
+                      HorizontalAlignment="Right" 
+                      IsOn="{Binding IsOuterLoop, Mode=TwoWay}"
+                      IsEnabled="{Binding CanSwitch}"
+                      OnContent="{Binding SwitchDirOnContent}"
+                      OffContent="{Binding SwitchDirOffContent}"/>
     </Grid>
 </prism:SessionStateAwarePage>

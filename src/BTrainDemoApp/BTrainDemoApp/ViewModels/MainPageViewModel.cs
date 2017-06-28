@@ -19,6 +19,8 @@ namespace BTrainDemoApp.ViewModels
         private VoiceCommandReceiver _commandReceiver;
         private TrainController _trainController;
 
+        private Windows.ApplicationModel.Resources.ResourceLoader _resLoader = new Windows.ApplicationModel.Resources.ResourceLoader();
+
         private EControlMode _mode;
         private int _trainPosition;
         private bool _modeIsVoice;
@@ -47,6 +49,8 @@ namespace BTrainDemoApp.ViewModels
                 {
                     DemoController.Stop();
                 }
+                RaisePropertyChanged(nameof(SwitchDirOffContent));
+                RaisePropertyChanged(nameof(SwitchDirOnContent));
             }
         }
 
@@ -78,7 +82,11 @@ namespace BTrainDemoApp.ViewModels
         public bool IsOuterLoop
         {
             get => _isOuterLoop;
-            set => SetProperty(ref _isOuterLoop, value);
+            set
+            {
+                SetProperty(ref _isOuterLoop, value);
+                DemoController.IsLoopOuter = value;
+            }
         }
 
         public bool IsInitialized
@@ -91,16 +99,30 @@ namespace BTrainDemoApp.ViewModels
             }
         }
 
-        public ETrainStatus TrainStatus
+        public string SwitchDirOnContent
         {
-            get => _trainStatus;
-            set => SetProperty(ref _trainStatus, value);
+            get
+            {
+                if (Mode == EControlMode.VoiceCommand)
+                {
+                    return _resLoader.GetString("LoopDirLeftVoice");
+                }
+
+                return _resLoader.GetString("LoopDirLeftDemo");
+            }
         }
 
-        public LoopStationInfo StationInfo
+        public string SwitchDirOffContent
         {
-            get => _stationInfo;
-            set => SetProperty(ref _stationInfo, value);
+            get
+            {
+                if (Mode == EControlMode.VoiceCommand)
+                {
+                    return _resLoader.GetString("LoopDirRightVoice");
+                }
+
+                return _resLoader.GetString("LoopDirRightDemo");
+            }
         }
 
         public DemoController DemoController { get; }
@@ -119,10 +141,6 @@ namespace BTrainDemoApp.ViewModels
             _trainController = new TrainController();
             _trainController.ConnectionChagned += OnChangedTrainConnection;
             _trainController.PositionUpdated += OnUpdatedTrainPosition;
-
-            TrainStatus = ETrainStatus.Stop;
-            var stations = new OsakaLoopLineStations();
-            StationInfo = stations[OsakaLoopLineStations.DefaultKey];
 
             DemoController = new DemoController(_trainController);
         }
@@ -165,6 +183,14 @@ namespace BTrainDemoApp.ViewModels
                     IsInitialized = false;
                     _trainController.Connect();
                 }
+            });
+        }
+
+        private async void OnChangedTrainStatus(object sender, bool isRunning)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                CanSwitch = !isRunning;
             });
         }
 

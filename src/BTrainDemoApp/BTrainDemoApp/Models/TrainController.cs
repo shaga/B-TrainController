@@ -102,6 +102,8 @@ namespace BTrainDemoApp.Models
 
         public event EventHandler<bool> ConnectionChagned;
 
+        public event EventHandler<bool> TrainStatusChanged;
+
         #endregion
 
         #region constructor
@@ -150,6 +152,8 @@ namespace BTrainDemoApp.Models
             var data = new[] {(byte) direction, (byte) speed};
 
             await _controllerCharacteristic.WriteValueAsync(data.AsBuffer(), GattWriteOption.WriteWithoutResponse);
+
+            TrainStatusChanged?.Invoke(this, direction != EDirection.Stop);
         }
 
         private void OnReceivedAdvertisement(BluetoothLEAdvertisementWatcher watcher,

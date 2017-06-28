@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="LoopDirLeftDemo" xml:space="preserve">
+    <value>Inner</value>
+  </data>
+  <data name="LoopDirLeftVoice" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="LoopDirRightDemo" xml:space="preserve">
+    <value>Outer</value>
+  </data>
+  <data name="LoopDirRightVoice" xml:space="preserve">
+    <value>Right</value>
+  </data>
   <data name="SwitchDemo.OffContent" xml:space="preserve">
     <value>Demo</value>
   </data>
