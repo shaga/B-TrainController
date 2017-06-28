@@ -101,7 +101,6 @@
     <Compile Include="Models\DemoController.cs" />
     <Compile Include="Models\LoopStationInfo.cs" />
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Views\Controls\DomoControl.cs" />
     <Compile Include="Views\Controls\GuideMonitor.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -109,11 +108,9 @@
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="Models\Converters\BooleanVisibilityConverter.cs" />
     <Compile Include="Models\Converters\TrainPositionConverter.cs" />
-    <Compile Include="Models\StationInfo.cs" />
     <Compile Include="Models\TrainController.cs" />
     <Compile Include="Models\VoiceCommandReceiver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Controls\OsakaLoopLineSign.cs" />
     <Compile Include="Views\Controls\TrainMap.cs" />
   </ItemGroup>
   <ItemGroup>

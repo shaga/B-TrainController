@@ -9,83 +9,6 @@
     <converters:TrainPositionConverter x:Key="TrainPosisionConverter"/>
     <converters:BooleanVisibilityConverter x:Key="BooleanVisibilityConverter"/>
 
-    
-    
-    <!--<Style TargetType="controls:OsakaLoopLineSign">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="controls:OsakaLoopLineSign">
-                    <Grid  Background="#222222">
-                        <Grid.Resources>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="Foreground" Value="White"/>
-                            </Style>
-                            <Style TargetType="Viewbox">
-                                <Setter Property="Stretch" Value="Uniform"/>
-                            </Style>
-                        </Grid.Resources>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="5*"/>
-                            <RowDefinition Height="2*"/>
-                            <RowDefinition Height="2*"/>
-                            <RowDefinition Height="1*"/>
-                            <RowDefinition Height="10"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Viewbox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
-                                 HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StationInfo.NameFull}"/>
-                        </Viewbox>
-
-                        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Viewbox Grid.Column="0" Margin="0,0,10,0"
-                                     HorizontalAlignment="Right" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StationInfo.NameKana}"/>
-                            </Viewbox>
-
-                            <Viewbox Grid.Column="1" Margin="10,0,0,0"
-                                     HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StationInfo.NameEng}"/>
-                            </Viewbox>
-                        </Grid>
-
-                        <Border Background="Red" Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3"/>
-
-                        <Viewbox Grid.Row="2" Grid.Column="0"
-                                 HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextOutStationInfo.NameKana}"/>
-                        </Viewbox>
-
-
-                        <Viewbox Grid.Row="2" Grid.Column="2"
-                                 HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextInStationInfo.NameKana}"/>
-                        </Viewbox>
-
-                        <Viewbox Grid.Row="3" Grid.Column="0"
-                                 HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextOutStationInfo.NameEng}"/>
-                        </Viewbox>
-
-                        <Viewbox Grid.Row="3" Grid.Column="2"
-                                 HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextInStationInfo.NameEng}"/>
-                        </Viewbox>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-
     <Style TargetType="Ellipse" x:Key="PosCircle">
         <Setter Property="Width" Value="25"/>
         <Setter Property="Height" Value="25"/>
@@ -174,24 +97,6 @@
                         </Viewbox>
                         
                     </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="controls:DomoControl">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="controls:DomoControl">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <controls:OsakaLoopLineSign Grid.Row="0" Height="200" VerticalAlignment="Top"/>
-                        <ToggleSwitch x:Uid="SwitchLoopDirection" Grid.Row="1" Margin="5"
-                                      OnContent="" OffContent=""/>
-                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
