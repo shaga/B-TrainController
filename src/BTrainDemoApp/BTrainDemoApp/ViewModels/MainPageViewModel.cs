@@ -23,13 +23,10 @@ namespace BTrainDemoApp.ViewModels
 
         private EControlMode _mode;
         private int _trainPosition;
-        private bool _modeIsVoice;
+        private bool _modeIsVoice = true;
         private bool _canSwitch;
-        private bool _isRunning;
         private bool _isOuterLoop;
         private bool _isInitialized;
-        private ETrainStatus _trainStatus;
-        private LoopStationInfo _stationInfo;
 
         #endregion
 
@@ -105,10 +102,10 @@ namespace BTrainDemoApp.ViewModels
             {
                 if (Mode == EControlMode.VoiceCommand)
                 {
-                    return _resLoader.GetString("LoopDirLeftVoice");
+                    return _resLoader.GetString("LoopDirRightVoice");
                 }
 
-                return _resLoader.GetString("LoopDirLeftDemo");
+                return _resLoader.GetString("LoopDirRightDemo");
             }
         }
 
@@ -118,10 +115,10 @@ namespace BTrainDemoApp.ViewModels
             {
                 if (Mode == EControlMode.VoiceCommand)
                 {
-                    return _resLoader.GetString("LoopDirRightVoice");
+                    return _resLoader.GetString("LoopDirLeftVoice");
                 }
 
-                return _resLoader.GetString("LoopDirRightDemo");
+                return _resLoader.GetString("LoopDirLeftDemo");
             }
         }
 
@@ -141,6 +138,7 @@ namespace BTrainDemoApp.ViewModels
             _trainController = new TrainController();
             _trainController.ConnectionChagned += OnChangedTrainConnection;
             _trainController.PositionUpdated += OnUpdatedTrainPosition;
+            _trainController.TrainStatusChanged += OnChangedTrainStatus;
 
             DemoController = new DemoController(_trainController);
         }
@@ -176,21 +174,23 @@ namespace BTrainDemoApp.ViewModels
                 {
                     Mode = ModeIsVoice ? EControlMode.VoiceCommand : EControlMode.Demo;
                     IsInitialized = true;
+                    CanSwitch = true;
                 }
                 else
                 {
                     Mode = EControlMode.Connecting;
                     IsInitialized = false;
                     _trainController.Connect();
+                    CanSwitch = false;
                 }
             });
         }
 
-        private async void OnChangedTrainStatus(object sender, bool isRunning)
+        private async void OnChangedTrainStatus(object sender, ETrainStatus status)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {
-                CanSwitch = !isRunning;
+                CanSwitch = status == ETrainStatus.Stop;
             });
         }
 
@@ -202,20 +202,7 @@ namespace BTrainDemoApp.ViewModels
         {
             if (!_trainController.IsConnected && !_modeIsVoice) return;
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-                switch (command)
-                {
-                    case EVoiceCommand.Go:
-                        if (_isRunning) break;
-                        _trainController.SetSpeed(IsOuterLoop ? EDirection.Outside : EDirection.Inside, 0x60);
-                        break;
-                    case EVoiceCommand.Stop:
-                        if (!_isRunning) break;
-                        _trainController.SetSpeed(EDirection.Stop);
-                        break;
-                }
-            });
+            _trainController.StartLoop(IsOuterLoop);
         }
 
         #endregion

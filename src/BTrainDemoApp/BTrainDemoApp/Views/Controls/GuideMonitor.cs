@@ -65,13 +65,21 @@ namespace BTrainDemoApp.Views.Controls
         {
             var monitor = obj as GuideMonitor;
 
-            monitor?.UpdateVisibility();
+            if (monitor == null) return;
+
+            monitor.UpdateVisibility();
+            var info = monitor.LoopStationInfo;
+            monitor.TrainDirection = monitor.IsOuterLoop ? info?.DirOuter : info?.DirInner;
+
         }
 
         public bool IsOuterLoop
         {
             get => (bool)GetValue(IsOuterLoopProperty);
-            set => SetValue(IsOuterLoopProperty, value);
+            set
+            {
+                SetValue(IsOuterLoopProperty, value);
+            }
         }
 
         public static readonly DependencyProperty TrainStatusProperty =
@@ -119,11 +127,11 @@ namespace BTrainDemoApp.Views.Controls
             monitor.NextCircleRow = info?.Station.Row ?? 0;
             monitor.NextCircleCol = info?.Station.Col ?? 0;
 
-            monitor.ArrowRightRow = info?.ArrowOuter.Row ?? 0;
-            monitor.ArrowRightCol = info?.ArrowOuter.Col ?? 0;
+            monitor.ArrowRightRow = info?.ArrowRight.Row ?? 0;
+            monitor.ArrowRightCol = info?.ArrowRight.Col ?? 0;
 
-            monitor.ArrowLeftRow = info?.ArrowInner.Row ?? 0;
-            monitor.ArrowLeftCol = info?.ArrowInner.Col ?? 0;
+            monitor.ArrowLeftRow = info?.ArrowLeft.Row ?? 0;
+            monitor.ArrowLeftCol = info?.ArrowLeft.Col ?? 0;
 
             monitor.TrainDirection = monitor.IsOuterLoop ? info?.DirOuter : info?.DirInner;
 

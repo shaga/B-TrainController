@@ -29,8 +29,7 @@ namespace BTrainDemoApp.Models
 
         #region const
 
-        private const int StationStopInterval = 5000;
-
+        private const int StationStopInterval = 10000;
         #endregion
 
         #region field
@@ -42,9 +41,6 @@ namespace BTrainDemoApp.Models
         private bool _isDemoStop = false;
         private LoopStationInfo _stationInfo;
 
-        private int _loopCount;
-
-        private int _position;
         private ETrainStatus _trainStatus;
 
         #endregion
@@ -84,7 +80,7 @@ namespace BTrainDemoApp.Models
         public DemoController(TrainController controller)
         {
             _trainController = controller;
-            _trainController.PositionUpdated += OnTrainPositionChanged;
+            _trainController.TrainStatusChanged += OnChangedTrainStatus;
 
             TrainStatus = ETrainStatus.Stop;
             _stations = new OsakaLoopLineStations();
@@ -95,19 +91,14 @@ namespace BTrainDemoApp.Models
 
         #region method
 
-        public async void Start()
+        public void Start()
         {
             if (_isDemoRunning) return;
 
             _isDemoRunning = true;
             _isDemoStop = false;
 
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-            {
-                var direction = IsLoopOuter ? EDirection.Outside : EDirection.Inside;
-                TrainStatus = ETrainStatus.Go;
-                _trainController.SetSpeed(direction, 0x60);
-            });
+            GoNextStation();
         }
 
         public void Stop()
@@ -117,94 +108,37 @@ namespace BTrainDemoApp.Models
             _isDemoStop = true;
         }
 
-        public async void SetPosition(int position)
-        {
-            _position = position;
-
-            var direction = IsLoopOuter ? EDirection.Outside : EDirection.Inside;
-            if (_position == TrainController.PosFront)
-            {
-                _loopCount++;
-
-                if (_loopCount >= 2)
-                {
-                    _loopCount = 0;
-
-                    await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
-                    {
-                        TrainStatus = ETrainStatus.Stop;
-                        _trainController.SetSpeed(EDirection.Stop);
-                        await Task.Delay(StationStopInterval);
-                        if (_isDemoStop)
-                        {
-                            _isDemoRunning = false;
-                            _isDemoStop = false;
-                            return;
-                        }
-                        StationInfo = _stations[IsLoopOuter ? StationInfo.NextOuter : StationInfo.NextInner];
-                        TrainStatus = ETrainStatus.Go;
-                        _trainController.SetSpeed(direction, 0x60);
-                    });
-                }
-            }
-            else
-            {
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
-                {
-                    switch (_position)
-                    {
-                        case TrainController.PosFrontLeft:
-                            if (_loopCount == 0 && IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0x80);
-                            else if (_loopCount == 1 && !IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0x60);
-                            break;
-                        case TrainController.PosLeft:
-                            if (_loopCount == 0 && IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0xa0);
-                            else if (_loopCount == 1 && !IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0x80);
-                            break;
-                        case TrainController.PosBackLeft:
-                            if (_loopCount == 0 && IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0xc0);
-                            else if (_loopCount == 1 && !IsLoopOuter)
-                            {
-                                TrainStatus = ETrainStatus.Arriving;
-                                _trainController.SetSpeed(direction, 0xa0);
-                            }
-                            break;
-                        case TrainController.PosFrontRight:
-                            if (_loopCount == 0 && !IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0x80);
-                            else if (_loopCount == 1 && IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0x60);
-                            break;
-                        case TrainController.PosRight:
-                            if (_loopCount == 0 && !IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0xa0);
-                            else if (_loopCount == 1 && IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0x80);
-                            break;
-                        case TrainController.PosBackRight:
-                            if (_loopCount == 0 && !IsLoopOuter)
-                                _trainController.SetSpeed(direction, 0xc0);
-                            else if (_loopCount == 1 && IsLoopOuter)
-                            {
-                                TrainStatus = ETrainStatus.Arriving;
-                                _trainController.SetSpeed(direction, 0x60);
-                            }
-                            break;
-                    }
-                });
-            }
-        }
-
-        private void OnTrainPositionChanged(object sender, int position)
+        private async void OnChangedTrainStatus(object sender, ETrainStatus status)
         {
             if (!_isDemoRunning) return;
 
-            SetPosition(position);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                TrainStatus = status;
+            });
+
+            if (status != ETrainStatus.Stop) return;
+
+            await Task.Delay(StationStopInterval);
+
+            if (_isDemoStop)
+            {
+                _isDemoRunning = false;
+                _isDemoStop = false;
+                return;
+            }
+
+            GoNextStation();
+        }
+
+        private async void GoNextStation()
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
+            {
+                StationInfo = _stations[IsLoopOuter ? StationInfo.NextOuter : StationInfo.NextInner];
+            });
+
+            _trainController.StartLoop(IsLoopOuter);
         }
 
         #endregion

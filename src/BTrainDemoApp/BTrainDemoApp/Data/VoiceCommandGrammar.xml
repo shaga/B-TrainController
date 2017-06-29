@@ -11,9 +11,6 @@
       <item>
         出発進行 <tag> out.cmd="Go"; </tag>
       </item>
-      <item>
-        もうすぐ駅です <tag> out.cmd="Stop"; </tag>
-      </item>
     </one-of>
   </rule>
   

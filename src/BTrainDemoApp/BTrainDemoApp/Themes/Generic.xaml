@@ -223,13 +223,13 @@
                                     <Image Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowLeftRow}" 
                                            Grid.Column="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowLeftCol}" 
                                            Source="../Images/ArrowLeft.png" Stretch="None"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowLeftVisibility}"/>
 
                                     <Image Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowRightRow}"
                                            Grid.Column="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowRightCol}"
                                            Source="../Images/ArrowRight.png" Stretch="None"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           HorizontalAlignment="Right" VerticalAlignment="Center"
                                            Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ArrowRightVisibility}"/>
 
                                     <Ellipse Grid.Row="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NextCircleRow}"

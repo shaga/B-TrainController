@@ -21,9 +21,9 @@ namespace BTrainDemoApp.Models
 
     public class LoopStationInfo
     {
-        public Position ArrowOuter { get; }
+        public Position ArrowRight { get; }
 
-        public Position ArrowInner { get; }
+        public Position ArrowLeft { get; }
 
         public Position Station { get; }
 
@@ -49,8 +49,8 @@ namespace BTrainDemoApp.Models
 
             Station = new Position(row, col);
 
-            ArrowInner = new Position(row, isUpper ? col + 1 : col - 1);
-            ArrowOuter = new Position(row, isUpper ? col - 1 : col + 1);
+            ArrowLeft = new Position(row, col + 1);
+            ArrowRight = new Position(row, col - 1);
             IsUpper = isUpper;
         }
     }

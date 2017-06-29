@@ -22,8 +22,8 @@ namespace BTrainDemoApp.Models
 
     public enum EDirection
     {
-        Inside,
-        Outside,
+        Left,
+        Right,
         Stop,
     }
 
@@ -63,6 +63,12 @@ namespace BTrainDemoApp.Models
         public const int SpeedMin = 0x60;
         public const int SpeedMax = 0xff;
 
+        public const int SpeedMidLow = 0x70;
+        public const int SpeedMidHigh = 0x85;
+        public const int SpeedHigh = 0xb0;
+
+        public const int MaxLoopCount = 2;
+
         #endregion
 
         #endregion
@@ -85,6 +91,10 @@ namespace BTrainDemoApp.Models
         private GattCharacteristic _controllerCharacteristic;
         private GattCharacteristic _positionCharacteristic;
 
+        private int _loopCount = 0;
+
+        private bool _isRunning;
+
         #endregion
 
         #region property
@@ -94,6 +104,10 @@ namespace BTrainDemoApp.Models
         public bool IsConnected => (_bleDevice?.ConnectionStatus ?? BluetoothConnectionStatus.Disconnected) ==
                                    BluetoothConnectionStatus.Connected;
 
+        public int Position { get; set; }
+
+        public bool IsLoopRight { get; set; }
+
         #endregion
 
         #region event
@@ -102,7 +116,7 @@ namespace BTrainDemoApp.Models
 
         public event EventHandler<bool> ConnectionChagned;
 
-        public event EventHandler<bool> TrainStatusChanged;
+        public event EventHandler<ETrainStatus> TrainStatusChanged;
 
         #endregion
 
@@ -134,7 +148,17 @@ namespace BTrainDemoApp.Models
             
         }
 
-        public async void SetSpeed(EDirection direction, int speed = SpeedStop)
+        public void StartLoop(bool isLoopRight)
+        {
+            if (_isRunning) return;
+
+            var direction = isLoopRight ? EDirection.Right : EDirection.Left;
+            IsLoopRight = isLoopRight;
+            SetSpeed(direction, SpeedMin);
+            TrainStatusChanged?.Invoke(this, ETrainStatus.Go);
+        }
+
+        private async void SetSpeed(EDirection direction, int speed = SpeedStop)
         {
             if (!IsConnected || _controllerCharacteristic == null) return;
 
@@ -151,9 +175,10 @@ namespace BTrainDemoApp.Models
 
             var data = new[] {(byte) direction, (byte) speed};
 
-            await _controllerCharacteristic.WriteValueAsync(data.AsBuffer(), GattWriteOption.WriteWithoutResponse);
-
-            TrainStatusChanged?.Invoke(this, direction != EDirection.Stop);
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Low, async () =>
+            {
+                await _controllerCharacteristic.WriteValueAsync(data.AsBuffer(), GattWriteOption.WriteWithoutResponse);
+            });
         }
 
         private void OnReceivedAdvertisement(BluetoothLEAdvertisementWatcher watcher,
@@ -242,7 +267,68 @@ namespace BTrainDemoApp.Models
 
             var position = data[0];
 
+            Position = position;
             PositionUpdated?.Invoke(this, position);
+            SetNextAction();
+        }
+
+        private void SetNextAction()
+        {
+            switch (Position)
+            {
+                case PosFront:
+                    _loopCount++;
+                    if (_loopCount >= MaxLoopCount)
+                    {
+                        _isRunning = false;
+                        _loopCount = 0;
+                        SetSpeed(EDirection.Stop);
+                        TrainStatusChanged?.Invoke(this, ETrainStatus.Stop);
+                    }
+                    break;
+                case PosFrontLeft:
+                    if (_loopCount == 0 && IsLoopRight)
+                        SetSpeed(EDirection.Right, SpeedMidLow);
+                    else if (_loopCount == MaxLoopCount - 1 && !IsLoopRight)
+                        SetSpeed(EDirection.Left, SpeedMin);
+                    break;
+                case PosLeft:
+                    if (_loopCount == 0 && IsLoopRight)
+                        SetSpeed(EDirection.Right, SpeedMidHigh);
+                    else if (_loopCount == MaxLoopCount - 1 && !IsLoopRight)
+                        SetSpeed(EDirection.Left, SpeedMidLow);
+                    break;
+                case PosBackLeft:
+                    if (_loopCount == 0 && IsLoopRight)
+                        SetSpeed(EDirection.Right, SpeedHigh);
+                    else if (_loopCount == MaxLoopCount - 1 && !IsLoopRight)
+                    {
+                        SetSpeed(EDirection.Left, SpeedMidHigh);
+                        TrainStatusChanged?.Invoke(this, ETrainStatus.Arriving);
+                    }
+                    break;
+                case PosFrontRight:
+                    if (_loopCount == 0 && !IsLoopRight)
+                        SetSpeed(EDirection.Left, SpeedMidLow);
+                    else if (_loopCount == MaxLoopCount - 1 && IsLoopRight)
+                        SetSpeed(EDirection.Right, SpeedMin);
+                    break;
+                case PosRight:
+                    if (_loopCount == 0 && !IsLoopRight)
+                        SetSpeed(EDirection.Left, SpeedMidHigh);
+                    else if (_loopCount == MaxLoopCount - 1 && IsLoopRight)
+                        SetSpeed(EDirection.Right, SpeedMidLow);
+                    break;
+                case PosBackRight:
+                    if (_loopCount == 0 && !IsLoopRight)
+                        SetSpeed(EDirection.Left, SpeedHigh);
+                    else if (_loopCount == MaxLoopCount - 1 && IsLoopRight)
+                    {
+                        SetSpeed(EDirection.Right, SpeedMidHigh);
+                        TrainStatusChanged?.Invoke(this, ETrainStatus.Arriving);
+                    }
+                    break;
+            }
         }
 
         #endregion
